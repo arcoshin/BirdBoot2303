@@ -1,0 +1,137 @@
+HTTP協議  超文本傳輸協議 由萬維網制定(w3c)
+是瀏覽器與服務器通訊的應用層協議，規定了瀏覽器與服務器之間的交互規則以及交互數據的
+格式信息等。
+
+
+HTTP協議對於客戶端與服務端之間的交互規則有以下定義:
+要求瀏覽器與服務端之間必須遵循一問一答的規則，即:瀏覽器與服務端建立TCP連接後需要
+先發送一個請求(問)然後服務端接收到請求並予以處理後再發送響應(答)。注意，服務端永遠
+不會主動給瀏覽器發送信息。
+
+HTTP要求瀏覽器與服務端的傳輸層協議必須是可靠的傳輸，因此是使用TCP協議作為傳輸層
+協議的。
+
+HTTP協議對於瀏覽器與服務端之間交互的數據格式，內容也有一定的要求。
+瀏覽器給服務端發送的內容稱為請求Request
+服務端給瀏覽器發送的內容稱為響應Response
+
+請求和響應中大部分內容都是文本信息(字符串)，並且這些文本數據使用的字符集為:
+ISO8859-1.這是一個歐洲的字符集，裡面是不支持中文的!!!。而實際上請求和響應出現
+的字符也就是英文，數字，符號。
+
+請求Request
+請求是瀏覽器發送給服務端的內容，HTTP協議中一個請求由三部分構成:
+分別是:請求行，消息頭，消息正文。消息正文部分可以沒有。
+
+
+1:請求行
+請求行是一行字符串，以連續的兩個字符(回車符和換行符)作為結束這一行的標誌。
+回車符:在ASC編碼中2進制內容對應的整數是13.回車符通常用cr表示。
+換行符:在ASC編碼中2進制內容對應的整數是10.換行符通常用lf表示。
+回車符和換行符實際上都是不可見字符。
+
+請求行分為三部分:
+請求方式(SP)抽象路徑(SP)協議版本(CRLF)    注:SP是空格
+GET /myweb/index.html HTTP/1.1
+
+URL地址格式:
+協議://主機地址信息/抽象路徑
+http://localhost:8088/TeduStore/index.html
+GET /TeduStore/index.html HTTP/1.1
+
+
+http://localhost:8088/index.html
+GET /index.html HTTP/1.1
+
+http://localhost:8088/reg.html
+GET /reg.html HTTP/1.1
+
+2:消息頭
+消息頭是瀏覽器可以給服務端發送的一些附加信息，有的用來說明瀏覽器自身內容，有的
+用來告知服務端交互細節，有的告知服務端消息正文詳情等。
+
+消息頭由若干行組成，每行結束也是以CRLF標誌。
+每個消息頭的格式為:消息頭的名字(:SP)消息的值(CRLF)
+消息頭部分結束是以單獨的(CRLF)標誌。
+例如:
+Host: localhost:8088(CRLF)
+Connection: keep-alive(CRLF)
+Upgrade-Insecure-Requests: 1(CRLF)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36(CRLF)
+Sec-Fetch-User: ?1(CRLF)
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9(CRLF)
+Sec-Fetch-Site: none(CRLF)
+Sec-Fetch-Mode: navigate(CRLF)
+Accept-Encoding: gzip, deflate, br(CRLF)
+Accept-Language: zh-CN,zh;q=0.9(CRLF)(CRLF)
+
+
+3:消息正文
+消息正文是2進制數據，通常是用戶上傳的信息，比如:在頁面輸入的註冊信息，上傳的
+附件等內容。
+
+
+
+GET /index.html HTTP/1.1(CRLF)
+Host: localhost:8088(CRLF)
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36
+Sec-Fetch-User: ?1
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9
+1010101101001.....
+
+
+HTTP響應Response
+響應是服務端發送給客戶端的內容。一個響應包含三部分:狀態行，響應頭，響應正文
+
+1:狀態行
+狀態行是一行字符串(CRLF結尾)，並且狀態行由三部分組成，格式為:
+protocol(SP)statusCode(SP)statusReason(CRLF)
+協議版本(SP)狀態代碼(SP)狀態描述(CRLF)
+例如:
+HTTP/1.1 200 OK
+
+狀態代碼是一個3位數字，分為5類：
+1xx:保留
+2xx:成功，表示處理成功，並正常響應
+3xx:重定向，表示處理成功，但是需要瀏覽器進一步請求
+4xx:客戶端錯誤，表示客戶端請求錯誤導致服務端無法處理
+5xx:服務端錯誤，表示服務端處理請求過程出現了錯誤
+
+具體的數字在HTTP協議手冊中有相關的定義，可參閱。
+狀態描述手冊中根據不同的狀態代碼有參考值，也可以自行定義。通常使用參考值即可。
+
+
+響應頭:
+響應頭與請求中的消息頭格式一致，表示的是服務端發送給客戶端的附加信息。
+
+響應正文:
+2進制數據部分，包含的通常是客戶端實際請求的資源內容。
+
+響應的大致內容:
+HTTP/1.1 404 NotFound(CRLF)
+Content-Type: text/html(CRLF)
+Content-Length: 2546(CRLF)(CRLF)
+1011101010101010101......
+
+這裡的兩個響應頭:
+Content-Type是用來告知瀏覽器響應正文中的內容是什麼類型的數據(圖片，頁面等等)
+不同的類型對應的值是不同的，比如:
+文件類型              Content-Type對應的值
+html          text/html
+css           text/css
+js            application/javascript
+png           image/png
+gif           image/gif
+jpg           image/jpeg
+
+MIME
+Content-Length是用來告知瀏覽器響應正文的長度，單位是字節。
+
+瀏覽器接收正文前會根據上述兩個響應頭來得知長度和類型從而讀取出來做對應的處理以
+顯示給用戶看。

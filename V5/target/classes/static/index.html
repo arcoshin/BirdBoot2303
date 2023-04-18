@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>HTML簡介</title>
+    </head>
+    <body>
+        <center>
+            <a href="login.html">登入</a><br>
+            <a href="reg.html">註冊</a><br>
+            <a href="/userList">用戶列表</a><br>
+            <a href="article.html">發布新文章</a><br>
+            <a href="/articleList">文章列表</a><br>
+        </center>
+        <br>
+        <br>
+        <br>
+        <center>
+            <!--超連結 訪問相同網站的地址可以從"/"起始，系統支持此寫法(默認從資源包開始)-->
+            <a href="https://www.google.com">點我去Google</a><br>
+            <!--        <a href="https://192.168.0.17:9188/reg,html">點我註冊</a><br>-->
+            <!--        <a href="https://192.168.0.17:9188/classtable">點我看課表</a><br>-->
+            <a href="classtable.html">點我看課表</a><br>
+        </center>
+
+        <!--標題標籤-->
+        <h1>我是h1標題</h1>
+        <h2>我是h2標題</h2>
+        <h3>我是h3標題</h3>
+        <h4>我是h4標題</h4>
+        <h5>我是h5標題</h5>
+        <h6>我是h6標題</h6>
+
+        <!--置中標籤-->
+        <center>
+            <h1>我是置中標題</h1>
+        </center>
+
+        <!--輸入框 placeholder:提示值-->
+        <center>
+            <input type="text" placeholder="文本輸入框"><br>
+            <input type="password" placeholder="密碼輸入框"><br>
+            <input type="button" value="提交按鈕，來點一下" onclick="alert('點妳妹阿!')"><br>
+        </center>
+
+        <!--
+        訪問當前首頁,在瀏覽器地址欄的路徑:
+        http://localhost:8080/index.html
+               ^^^^^^^^^^^^^^
+        定位主機地址信息
+
+        http://localhost:8080/index.html
+                             ^^^^^^^^^^^
+        資源的抽象路徑
+
+        資源抽象路徑最開始的"/",SpringBoot默認的配置是從static目錄下根據該路徑定位資源
+        http://localhost:8080/index.html
+                             ^
+                         static目錄
+
+        在超鏈接中,如果我們定位的是本網站的其它資源時,href中指定路徑通常從"/"開始,這裡的
+        "/"就是URL中資源抽象路徑中最開始的"/"
+        意味著,當我們指定超鏈接:
+        <a href="/reg.html">註冊</a>
+        瀏覽器實際理解的路徑全稱:
+        http://localhost:8080/reg.html
+        ^^^^^^^^^^^^^^^^^^^^^
+        會沿用請求index.html時的主機地址信息
+        -->
+
+        <!--表格-->
+        <table border="1" align="center"><!--align="center"表格居中-->
+            <tr>
+                <td>第一行第一列</td>
+                <td>第一行第二列</td>
+                <!--列合併(左右) colspan-->
+                <td colspan="2" align="center">第一行第三列</td><!--align="center"列內文居中-->
+                <!--  <td>第一行第四列</td>......列合併後佔用的位置-->
+            </tr>
+            <tr>
+                <td>第二行第一列</td>
+                <!--行合併(上下)-->
+                <td rowspan="2" align="center">第二行第二列</td>
+                <td>第二行第三列</td>
+                <td>第二行第四列</td>
+            </tr>
+            <tr>
+                <td>第三行第一列</td>
+                <!--<td>第三行第二列</td>......行合併後佔用的位置-->
+                <td>第三行第三列</td>
+                <td>第三行第四列</td>
+            </tr>
+        </table>
+
+
+    </body>
+</html>

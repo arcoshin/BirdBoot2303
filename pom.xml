@@ -14,6 +14,9 @@
         <module>V3</module>
         <module>V4</module>
         <module>V5</module>
+        <module>V6</module>
+        <module>V7</module>
+        <module>V8</module>
     </modules>
     <properties>
         <!-- 設置 JDK 版本為 1.8 -->
@@ -24,6 +27,4 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
-
-
 </project>

@@ -45,9 +45,13 @@ public class HttpServletRequest {
         String[] sentence = line.split("\\s");
 
         //依照分段賦值相關訊息
-        method = sentence[0];//請求方式
-        uri = sentence[1];//請求方式
-        protocol = sentence[2];//請求方式
+        try {
+            method = sentence[0];//請求方式
+            uri = sentence[1];//請求方式
+            protocol = sentence[2];//請求方式
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         System.out.println("method = " + method);//打樁
         System.out.println("uri = " + uri);//打樁

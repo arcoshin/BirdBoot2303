@@ -38,9 +38,6 @@ public class HttpServletResponse {
         sendHeaders();
 
         //3-3發送響應正文
-        /**
-         * V13如果請求的是業務則可以沒有響應正文
-         */
         sendContent();
 
     }
@@ -76,21 +73,26 @@ public class HttpServletResponse {
      * 發送響應正文的方法
      */
     private void sendContent() throws IOException {
-        //輸入流
-        BufferedInputStream bis = new BufferedInputStream(
-                new FileInputStream(contentFile)
-        );
+        /**
+         * V13如果請求的是業務則可以沒有響應正文
+         */
+        if (contentFile != null) {
+            //輸入流
+            BufferedInputStream bis = new BufferedInputStream(
+                    new FileInputStream(contentFile)
+            );
 
-        //輸出流
-        BufferedOutputStream bos = new BufferedOutputStream(
-                socket.getOutputStream()
-        );
+            //輸出流
+            BufferedOutputStream bos = new BufferedOutputStream(
+                    socket.getOutputStream()
+            );
 
-        int d;
-        while ((d = bis.read()) != -1) {
-            bos.write(d);
+            int d;
+            while ((d = bis.read()) != -1) {
+                bos.write(d);
+            }
+            bos.close();//flush清空緩存，同時關閉流
         }
-        bos.close();//flush清空緩存，同時關閉流
     }
 
     /**
@@ -140,8 +142,8 @@ public class HttpServletResponse {
          */
         this.contentFile = contentFile;
 
-        addHeaders("Content-Type",mftm.getContentType(contentFile));
-        addHeaders("Content-Length",contentFile.length()+"");//+""強轉字符串類型
+        addHeaders("Content-Type", mftm.getContentType(contentFile));
+        addHeaders("Content-Length", contentFile.length() + "");//+""強轉字符串類型
     }
 
     public void addHeaders(String name, String value) {

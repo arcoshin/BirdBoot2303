@@ -104,7 +104,8 @@ public class ClientHandler implements Runnable {
     private void println(String line) throws IOException {
         BufferedOutputStream bos = new BufferedOutputStream(
                 socket.getOutputStream()
-        );        byte[] data = line.getBytes(StandardCharsets.ISO_8859_1);
+        );
+        byte[] data = line.getBytes(StandardCharsets.ISO_8859_1);
         bos.write(data);
         bos.write(13);//發送迴車符CR
         bos.write(10);//發送換行符LF

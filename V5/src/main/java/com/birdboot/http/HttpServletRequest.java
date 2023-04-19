@@ -10,8 +10,8 @@ public class HttpServletRequest {
     private Socket socket;
 
     private String method;//請求方式
-    private String uri;//請求方式
-    private String protocol;//請求方式
+    private String uri;//抽象路徑
+    private String protocol;//協議版本
     private Map<String, String> headers = new HashMap<>();//鍵值對:(消息頭=消息頭對應的值)
 
     public HttpServletRequest(Socket socket) throws IOException {

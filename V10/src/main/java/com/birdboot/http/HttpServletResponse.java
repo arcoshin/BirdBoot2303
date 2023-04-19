@@ -9,10 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class HttpServletResponse {
-    private static MimetypesFileTypeMap mftm = new MimetypesFileTypeMap();;
-    static {
-
-    }
+    private static MimetypesFileTypeMap mftm = new MimetypesFileTypeMap();
     private Socket socket;
 
     //狀態行相關訊息(而因出現機率較高而默認讓setStatusCode=200、setStatusReason="OK")

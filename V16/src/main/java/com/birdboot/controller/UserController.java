@@ -95,4 +95,64 @@ public class UserController {
 
 
     }
+
+    //登入:處理/loginUser請求
+    public void login(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("開始處理用戶登入......");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        /**
+         * 必要驗證
+         */
+        if (
+                username == null || username.isEmpty() ||
+                        password == null || password.isEmpty()
+        ) {
+            response.sendRedirect("login_info_error.html");
+            return;
+        }
+
+        /**
+         * 綁定users包中的對應數據
+         */
+        File file = new File(userDir, username + ".obj");
+        if (!file.exists()) {//綁定不到
+            response.sendRedirect("login_info_not_exist.html");
+            return;
+        }
+
+        /**
+         * 通過輸入流讀入該數據
+         */
+        try (
+                ObjectInputStream ois =
+                        new ObjectInputStream(
+                                new BufferedInputStream(
+                                        new FileInputStream(file)
+                                )
+                        );
+
+        ) {
+            User user = (User) ois.readObject();
+
+            /**
+             * 比對數據
+             */
+            if (
+                    user.getUsername().equals(username) && user.getPassword().equals(password)
+            ) {
+                response.sendRedirect("login_success.html");
+                return;
+            } else {
+                response.sendRedirect("login_info_not_match.html");
+                return;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 }

@@ -134,10 +134,6 @@ public class HttpServletRequest {
             String[] e = s.split("=", 2);
             parameters.put(e[0], e[1]);//split重載方法
 
-            /**
-             * 提示
-             * 分支的計算效率上: 三元>switch>if
-             */
         }
     }
 

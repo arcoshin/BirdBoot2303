@@ -7,6 +7,8 @@ import java.util.Scanner;
 
 /**
  * 模擬登入驗證業務
+ * 拓展介紹注入式攻擊 : SQL injection
+ * 透過輸入的訊息影響原有語意的代碼攻擊
  */
 public class JDBCDemo7 {
     public static void main(String[] args) {

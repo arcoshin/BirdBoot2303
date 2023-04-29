@@ -28,6 +28,7 @@
         <module>V17</module>
         <module>V18</module>
         <module>V19</module>
+        <module>JDBC</module>
     </modules>
     <properties>
         <!-- 設置 JDK 版本為 1.8 -->
@@ -38,4 +39,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
+    <dependencies>
+        <!-- 連接MySQL數據庫的依賴 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.15</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -8,9 +8,7 @@ import com.birdboot.http.HttpServletResponse;
 import com.birdboot.util.DBUtil;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 
 /**
@@ -130,47 +128,102 @@ public class UserController {
             return;
         }
 
-        /**
-         * 綁定users包中的對應數據
-         */
-        File file = new File(userDir, username + ".obj");
-        if (!file.exists()) {//綁定不到
-            response.sendRedirect("login_info_not_exist.html");
-            return;
-        }
-
-        /**
-         * 通過輸入流讀入該數據
-         */
         try (
-                ObjectInputStream ois =
-                        new ObjectInputStream(
-                                new BufferedInputStream(
-                                        new FileInputStream(file)
-                                )
-                        );
-
+                //連接數據庫
+                Connection connection = DBUtil.getConnection();
         ) {
-            User user = (User) ois.readObject();
+            //編寫sql指令
+            String sql = "SELECT username,password " +
+                    "FROM userinfo " +
+                    "WHERE username = ?";
 
-            /**
-             * 比對數據
-             */
-            if (
-                    user.getUsername().equals(username) && user.getPassword().equals(password)
-            ) {
-                response.sendRedirect("login_success.html");
-                return;
-            } else {
-                response.sendRedirect("login_info_not_match.html");
-                return;
+            //預編譯語句對象
+            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+
+            //聲明參數
+            prepareStatement.setString(1, username);
+
+            //執行語句
+            ResultSet resultSet = prepareStatement.executeQuery();
+
+            //驗證結果集
+            if (!resultSet.next()) {//如果結果集內數據不存在
+
+                //重定向用戶不存在
+                response.sendRedirect("login_info_not_exist.html");
+
+            } else {//如果結果集內數據存在
+
+                //比對密碼
+                if (password.equals(resultSet.getString("password"))) {
+                    //比對成功
+                    response.sendRedirect("login_success.html");
+                } else {
+                    //比對失敗
+                    response.sendRedirect("login_info_not_match.html");
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
 
+    }
+
+    //清單:--->其實就是處理"/userList"請求
+    @RequestMapping("/userList")
+    public void userList(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("開始生成用戶列表......");
+        response.addHeaders("Content-Type","text/html;charset=utf-8");
+
+
+//
+//        try (Connection connection = DBUtil.getConnection();){
+//            response.addHeaders("ContentType","text/html;charset=utf-8");
+//            PrintWriter pw = response.getWriter();
+//            pw.println("<!DOCTYPE html>");
+//            pw.println("<html lang=\"en\">");
+//            pw.println("<head>");
+//            pw.println("<meta charset=\"UTF-8\">");
+//            pw.println("<title>用户列表</title>");
+//            pw.println("</head>");
+//            pw.println("<body>");
+//            pw.println("<center>");
+//            pw.println("<h1>用户列表</h1>");
+//            pw.println("<table border=\"1\">");
+//            pw.println("<tr>");
+//            pw.println("<td>ID</td>");
+//            pw.println("<td>用户名</td>");
+//            pw.println("<td>密码</td>");
+//            pw.println("<td>昵称</td>");
+//            pw.println("<td>年龄</td>");
+//            pw.println("<td>操作</td>");
+//            pw.println("</tr>");
+//
+//            String sql = "SELECT id,username,password,nickname,age FROM userinfo";
+//            Statement statement = connection.createStatement();
+//            ResultSet rs = statement.executeQuery(sql);
+//            while (rs.next()){
+//                int id = rs.getInt("id");
+//                pw.println("<tr>");
+//                pw.println("<td>"+id+"</td>");
+//                pw.println("<td>"+rs.getString("username")+"</td>");
+//                pw.println("<td>"+rs.getString("password")+"</td>");
+//                pw.println("<td>"+rs.getString("nickname")+"</td>");
+//                pw.println("<td>"+rs.getInt("age")+"</td>");
+//                pw.println("<td><a href='/deleteUser?id="+id+"'>删除</a></td>");
+//                pw.println("</tr>");
+//            }
+//
+//            pw.println("</table>");
+//            pw.println("</center>");
+//            pw.println("</body>");
+//            pw.println("</html>");
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

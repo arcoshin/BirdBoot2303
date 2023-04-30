@@ -153,12 +153,13 @@ public class HttpServletResponse {
     /**
      * 重定向的方法
      */
-    public void sendRedirect(String location){
+    public void sendRedirect(String location) {
         //1.設置狀態代碼302
         statusCode = 302;
         setStatusReason("Moved Temporarily");
 
         //2.添加響應頭Location
-        addHeaders("Location",location);
+        addHeaders("Location", location);
     }
+
 }

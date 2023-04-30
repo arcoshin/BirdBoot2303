@@ -54,7 +54,7 @@ public class DispatcherServlet {
                 Object obj = cls.newInstance();
                 method.invoke(obj, request, response);
             } catch (Exception e) {
-                //若程序在這段代碼終報錯，那就是典型的音為服務端處理請求出現錯誤而導致處理失敗(500錯誤)
+                //若程序在這段代碼中報錯，那就是典型的因為服務端處理請求出現錯誤而導致處理失敗(500錯誤)
                 response.setStatusCode(500);
                 response.setStatusReason("Internal Server Error");
                 //瀏覽器有默認的500及404錯誤

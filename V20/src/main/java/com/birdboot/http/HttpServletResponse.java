@@ -4,9 +4,7 @@ import javax.activation.MimetypesFileTypeMap;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class HttpServletResponse {
     private static MimetypesFileTypeMap mftm = new MimetypesFileTypeMap();
@@ -18,6 +16,13 @@ public class HttpServletResponse {
 
     //響應頭相關訊息
     private Map<String, String> headers = new HashMap<>();//用以存放響應頭等相關訊息的鍵值對
+
+    /**
+     * V20 自定義
+     */
+
+    //V20 存放直接寫入瀏覽器的正文集合
+    private LinkedList<String> htmlContents = new LinkedList<>();
 
     //響應正文相關訊息
     private File contentFile;//響應正文對應的實體文件
@@ -92,8 +97,32 @@ public class HttpServletResponse {
                 bos.write(d);
             }
             bos.close();//flush清空緩存，同時關閉流
+        } else if (htmlContents != null){
+            writeIntoHtml(htmlContents);
+        } else {
+
         }
     }
+    /**
+     * V20 selfDefine
+     */
+    private PrintWriter pw;
+    public void writeIntoHtml(LinkedList<String> htmlContents) throws IOException {
+        //建立寫出流
+        pw = new PrintWriter(
+                new BufferedWriter(
+                        new OutputStreamWriter(
+                                socket.getOutputStream(),StandardCharsets.UTF_8
+                        )
+                )
+        ,true);
+
+        //寫出預設集合
+        for (String htmlContent : htmlContents) {
+            pw.println(htmlContent);
+        }
+    }
+
 
     /**
      * 向客戶發送一行字符串的方法
@@ -148,6 +177,16 @@ public class HttpServletResponse {
 
     public void addHeaders(String name, String value) {
         headers.put(name, value);
+    }
+
+
+    /**
+     * V20 自定義
+     */
+
+    //V20 編輯寫入瀏覽器的正文集合
+    public void addHtmlContents(String line) {
+        htmlContents.add(line);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.birdboot.controller;
 
 import com.birdboot.annotation.Controller;
 import com.birdboot.annotation.RequestMapping;
+import com.birdboot.core.ClientHandler;
 import com.birdboot.entity.User;
 import com.birdboot.http.HttpServletRequest;
 import com.birdboot.http.HttpServletResponse;
@@ -174,56 +175,110 @@ public class UserController {
     //清單:--->其實就是處理"/userList"請求
     @RequestMapping("/userList")
     public void userList(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("開始生成用戶列表......");
-        response.addHeaders("Content-Type","text/html;charset=utf-8");
+        try (
+                //連接數據庫
+                Connection connection = DBUtil.getConnection()
+        ) {
+            /**
+             * 以文本格式直接對瀏覽器寫入HTML語句
+             */
+            System.out.println("開始生成用戶列表......");
+            response.addHeaders("Content-Type", "text/html;charset=utf-8");
+
+            /**
+             * 正文開始
+             */
+            response.addHtmlContents("<!DOCTYPE html>");
+            response.addHtmlContents("<html lang=\"en\">");
+            response.addHtmlContents("<head>");
+            response.addHtmlContents("<meta charset=\"UTF-8\">");
+            response.addHtmlContents("<title>用戶列表</title>");
+            response.addHtmlContents("</head>");
+            response.addHtmlContents("<body>");
+            response.addHtmlContents("<center>");
+            response.addHtmlContents("<h1>用戶列表</h1>");
+            response.addHtmlContents("<table border=\"1\">");
+            response.addHtmlContents("<tr>");
+            response.addHtmlContents("<td>ID</td>");
+            response.addHtmlContents("<td>用戶名稱</td>");
+            response.addHtmlContents("<td>用戶密碼</td>");
+            response.addHtmlContents("<td>用戶暱稱</td>");
+            response.addHtmlContents("<td>用戶年齡</td>");
+            response.addHtmlContents("<td>用戶操作</td>");
+            response.addHtmlContents("</tr>");
 
 
-//
-//        try (Connection connection = DBUtil.getConnection();){
-//            response.addHeaders("ContentType","text/html;charset=utf-8");
-//            PrintWriter pw = response.getWriter();
-//            pw.println("<!DOCTYPE html>");
-//            pw.println("<html lang=\"en\">");
-//            pw.println("<head>");
-//            pw.println("<meta charset=\"UTF-8\">");
-//            pw.println("<title>用户列表</title>");
-//            pw.println("</head>");
-//            pw.println("<body>");
-//            pw.println("<center>");
-//            pw.println("<h1>用户列表</h1>");
-//            pw.println("<table border=\"1\">");
-//            pw.println("<tr>");
-//            pw.println("<td>ID</td>");
-//            pw.println("<td>用户名</td>");
-//            pw.println("<td>密码</td>");
-//            pw.println("<td>昵称</td>");
-//            pw.println("<td>年龄</td>");
-//            pw.println("<td>操作</td>");
-//            pw.println("</tr>");
-//
-//            String sql = "SELECT id,username,password,nickname,age FROM userinfo";
-//            Statement statement = connection.createStatement();
-//            ResultSet rs = statement.executeQuery(sql);
-//            while (rs.next()){
-//                int id = rs.getInt("id");
-//                pw.println("<tr>");
-//                pw.println("<td>"+id+"</td>");
-//                pw.println("<td>"+rs.getString("username")+"</td>");
-//                pw.println("<td>"+rs.getString("password")+"</td>");
-//                pw.println("<td>"+rs.getString("nickname")+"</td>");
-//                pw.println("<td>"+rs.getInt("age")+"</td>");
-//                pw.println("<td><a href='/deleteUser?id="+id+"'>删除</a></td>");
-//                pw.println("</tr>");
-//            }
-//
-//            pw.println("</table>");
-//            pw.println("</center>");
-//            pw.println("</body>");
-//            pw.println("</html>");
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+            /**
+             * 這一段開始查找數據庫中所有用戶的指定數據並寫入
+             */
+
+            //編寫sql語句 : 查找數據庫中所有用戶的數據
+            String sql = "SELECT id,username,password,nickname,age " +
+                    "FROM userinfo ";
+
+            //創建語句對象執行sql語句
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            //分析結果集
+            while (resultSet.next()) {//將指針移到下一行數據，如果存在......
+                int id = resultSet.getInt("id");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String nickname = resultSet.getString("nickname");
+                int age = resultSet.getInt("age");
+
+                response.addHtmlContents("<tr>");
+                response.addHtmlContents("<td>" + id + "</td>");
+                response.addHtmlContents("<td>" + username + "</td>");
+                response.addHtmlContents("<td>" + password + "</td>");
+                response.addHtmlContents("<td>" + nickname + "</td>");
+                response.addHtmlContents("<td>" + age + "</td>");
+                response.addHtmlContents("<td><a href=\"/deleteUser?id=" + id + "\">刪除</a></td>");
+                response.addHtmlContents("</tr>");
+            }
+
+            /**
+             * 補齊標籤末尾
+             */
+            response.addHtmlContents("<a href=\"/index.html\">回到首頁</a>");
+            response.addHtmlContents("</table>");
+            response.addHtmlContents("</center>");
+            response.addHtmlContents("</body>");
+            response.addHtmlContents("</html>");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
+
+    //刪除:--->其實就是處理"/deleteUser"請求
+    @RequestMapping("/deleteUser")
+    public void deleteUser(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("正在刪除用戶....");
+        //從請求路徑中獲取某個參數
+        String id = request.getParameter("id");
+
+        try (
+                //連接數據庫
+                Connection connection = DBUtil.getConnection();
+        ) {
+            //編寫sql語句
+            String sql = "DELETE " +
+                    "FROM userinfo " +
+                    "WHERE id=" + id;
+
+            //創建語句對象，執行sql語句
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sql);
+            response.sendRedirect("/userList");
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -31,6 +31,7 @@
         <module>JDBC</module>
         <module>V20</module>
     </modules>
+
     <properties>
         <!-- 設置 JDK 版本為 1.8 -->
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -40,6 +41,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
+
     <dependencies>
         <!-- 連接MySQL數據庫的依賴 -->
         <dependency>
